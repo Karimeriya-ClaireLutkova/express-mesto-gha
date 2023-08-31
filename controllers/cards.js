@@ -7,8 +7,8 @@ module.exports.createCard = (req, res) => {
     .catch(err => res.status(500).send({message: 'Произошла ошибка'}));
 };
 module.exports.getCards = (req, res) => {
-  User.find({})
-    .then(users => res.send({data: users}))
+  Card.find({})
+    .then(cards => res.send({data: cards}))
     .catch(err => res.status(500).send({message: 'Произошла ошибка'}));
 };
 module.exports.deleteCard = (req, res) => {
