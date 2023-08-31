@@ -57,6 +57,6 @@
     "dev": "nodemon app.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Claire Lutkova",
   "license": "ISC"
 }
