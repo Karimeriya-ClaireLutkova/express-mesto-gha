@@ -22,3 +22,10 @@ module.exports.updateUser = (req, res) => {
     .then(user => res.send({data: user}))
     .catch(err => res.status(500).send({message: 'Данные не прошли валидацию либо произошла ошибка'}));
 };
+module.exports.updateAvatar = (req, res) => {
+  const userId = req.user._id;
+  const {avatar} = req.body;
+  User.findByIdAndUpdate(userId, {avatar}, {new: true, runValidators: true})
+    .then(user => res.send({data: user}))
+    .catch(err => res.status(500).send({message: 'Данные не прошли валидацию либо произошла ошибка'}));
+};
