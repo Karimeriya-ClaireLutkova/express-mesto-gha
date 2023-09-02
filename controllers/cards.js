@@ -3,7 +3,13 @@ module.exports.createCard = (req, res) => {
   const {name, link} = req.body;
   Card.create({name, link, owner: req.user._id})
     .then(card => res.send(card))
-    .catch(err => res.status(500).send({messege: 'Произошла ошибка'}));
+    .catch(err => {
+      if(err.name === 'ValidationError') {
+        return res.status(400).send({messege: `${err.name}: 'Введены неверные данные'`});
+      } else {
+        return res.status(500).send({messege: 'Произошла ошибка'});
+      }
+    });
 };
 module.exports.getCards = (req, res) => {
   Card.find({})
