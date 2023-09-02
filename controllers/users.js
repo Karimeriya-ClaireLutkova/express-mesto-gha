@@ -15,4 +15,10 @@ module.exports.getUser = (req, res) => {
     .then(user => res.send({data: user}))
     .catch(err => res.status(500).send({message: 'Произошла ошибка'}));
 };
-module.
+module.exports.updateUser = (req, res) => {
+  const userId = req.user._id;
+  const {name, about} = req.body;
+  User.findByIdAndUpdate(userId, {name, about}, {new: true, runValidators: true})
+    .then(user => res.send({data: user}))
+    .catch(err => res.status(500).send({message: 'Данные не прошли валидацию либо произошла ошибка'}));
+};
