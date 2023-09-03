@@ -37,10 +37,10 @@ module.exports.deleteCard = (req, res) => {
     })
     .catch(err => {
       if (err.name === 'Not Found Error') {
-        res.status(err.statusCode).send({message: `${err.name}. ${err.message}`});
+        res.status(err.statusCode).send({message: `${err.name}: ${err.message}`});
       }
       if (err.name === 'Forbidden Error') {
-        res.status(err.statusCode).send({message: `${err.name}. ${err.message}`});
+        res.status(err.statusCode).send({message: `${err.name}: ${err.message}`});
       } else {
         res.status(500).send({message: 'Произошла ошибка'})
       }
