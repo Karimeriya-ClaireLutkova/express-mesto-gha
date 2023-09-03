@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const routerUsers = require('./routes/users');
 const routerCards = require('./routes/cards');
+const NotFoundError = require('./errors/NotFoundError');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -18,4 +19,7 @@ app.use((req, res, next) => {
 });
 app.use(routerUsers);
 app.use(routerCards);
+app.use('*', (req, res, next) => {
+  next(new NotFoundError('Ресурс не найден'));
+});
 app.listen(PORT);
