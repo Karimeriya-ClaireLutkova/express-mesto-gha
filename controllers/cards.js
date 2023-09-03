@@ -1,4 +1,6 @@
 const Card = require('../models/card');
+const NotFoundError = require('../errors/NotFoundError');
+const ForbiddenError = require('../errors/ForbiddenError');
 module.exports.createCard = (req, res) => {
   const {name, link} = req.body;
   Card.create({name, link, owner: req.user._id})
@@ -21,19 +23,27 @@ module.exports.deleteCard = (req, res) => {
   Card.findById(req.params.cardId)
     .then((card)=> {
       if(card === null) {
-        throw new Error('Карточка не найдена');
+        throw new NotFoundError('Карточка не найдена');
       }
       if(card.owner.toString() !== owner) {
-        throw new Error('Нет прав на удаление карточки');
+        throw new ForbiddenError('Нет прав на удаление карточки');
       }
       return Card.findByIdAndRemove(req.params.cardId)
         .populate(['owner', 'likes'])
         .then(card => res.send({ data: card }))
-        .catch(err => res.status(500).send({message: 'Произошла ошибка'}));
+        .catch(err => {
+          next(err)
+        });
     })
     .catch(err => {
-      console.log(err.massage);
-      res.status(500).send({message: 'Произошла ошибка'})
+      if (err.name === 'Not Found Error') {
+        res.status(err.statusCode).send({message: `${err.name}. ${err.message}`});
+      }
+      if (err.name === 'Forbidden Error') {
+        res.status(err.statusCode).send({message: `${err.name}. ${err.message}`});
+      } else {
+        res.status(500).send({message: 'Произошла ошибка'})
+      }
     });
 };
 module.exports.likeCard = (req, res) => {

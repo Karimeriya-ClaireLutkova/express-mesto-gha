@@ -20,7 +20,6 @@ module.exports.getUser = (req, res) => {
   User.findById(req.params.userId)
     .then(user => res.send({data: user}))
     .catch(err => {
-      console.log(err.status);
       if(err.status === '404') {
         return res.status(400).send({message: `${err.name}: 'Введены неверные данные'`});
       } else {
