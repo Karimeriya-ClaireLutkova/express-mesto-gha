@@ -6,7 +6,7 @@ module.exports.createUser = (req, res) => {
     .then(user => res.send({data: user}))
     .catch(err => {
       if(err.name === 'ValidationError') {
-        return res.status(400).send({message: `${err.name}: 'Введены неверные данные'`});
+        return res.status(400).send({message: 'Введены неверные данные'});
       } else {
         return res.status(500).send({message: 'Произошла ошибка'});
       }
@@ -21,13 +21,13 @@ module.exports.getUser = (req, res) => {
   User.findById(req.params.userId)
     .then(user => {
       if(user === null) {
-        throw new NotFoundError('Пользователь не найден');
+        throw new NotFoundError('Запрашиваемый пользователь не найден');
       }
       return res.send({data: user});
     })
     .catch(err => {
       if(err.name === 'Not Found Error') {
-        res.status(err.statusCode).send({message: `${err.name}: ${err.message}`});
+        res.status(err.statusCode).send({message: `${err.message}`});
       } else {
         res.status(500).send({message: 'Произошла ошибка'});
       }
@@ -40,7 +40,7 @@ module.exports.updateUser = (req, res) => {
     .then(user => res.send({data: user}))
     .catch(err => {
       if(err.name === 'ValidationError') {
-        return res.status(400).send({message: `${err.name}: 'Введены неверные данные'`});
+        return res.status(400).send({message: 'Введены неверные данные'});
       } else {
         return res.status(500).send({message: 'Произошла ошибка'});
       }
@@ -53,7 +53,7 @@ module.exports.updateAvatar = (req, res) => {
     .then(user => res.send({data: user}))
     .catch(err => {
       if(err.name === 'ValidationError') {
-        return res.status(400).send({message: `${err.name}: 'Введены неверные данные'`});
+        return res.status(400).send({message: 'Введены неверные данные'});
       } else {
         return res.status(500).send({message: 'Произошла ошибка'});
       }

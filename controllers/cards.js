@@ -23,7 +23,7 @@ module.exports.deleteCard = (req, res) => {
   Card.findById(req.params.cardId)
     .then((card)=> {
       if(card === null) {
-        throw new NotFoundError('Карточка не найдена');
+        throw new NotFoundError('Запрашиваемая карточка не найдена');
       }
       if(card.owner.toString() !== owner) {
         throw new ForbiddenError('Нет прав на удаление карточки');
@@ -37,10 +37,10 @@ module.exports.deleteCard = (req, res) => {
     })
     .catch(err => {
       if (err.name === 'Not Found Error') {
-        res.status(err.statusCode).send({message: `${err.name}: ${err.message}`});
+        res.status(err.statusCode).send({message: `${err.message}`});
       }
       if (err.name === 'Forbidden Error') {
-        res.status(err.statusCode).send({message: `${err.name}: ${err.message}`});
+        res.status(err.statusCode).send({message: `${err.message}`});
       } else {
         res.status(500).send({message: 'Произошла ошибка'})
       }
