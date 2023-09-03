@@ -7,9 +7,9 @@ module.exports.createCard = (req, res) => {
     .then(card => res.send(card))
     .catch(err => {
       if(err.name === 'ValidationError') {
-        return res.status(400).send({message: `${err.name}: 'Введены неверные данные'`});
+        res.status(400).send({message: 'Переданы некорректные данные при создании карточки'});
       } else {
-        return res.status(500).send({message: 'Произошла ошибка'});
+        res.status(500).send({message: 'Произошла ошибка'});
       }
     });
 };
@@ -52,8 +52,22 @@ module.exports.likeCard = (req, res) => {
     {$addToSet: {likes: req.user._id}},
     {new: true}
   )
-  .then(card => res.send({ data: card }))
-  .catch(err => res.status(500).send({message: 'Произошла ошибка'}));
+  .then(card => {
+    if (card === null) {
+      throw new NotFoundError('Передан несуществующий _id карточки')
+    }
+    return res.send({ data: card });
+  })
+  .catch(err => {
+    if (err.name === 'Not Found Error') {
+      res.status(err.statusCode).send({message: `${err.message}`});
+    }
+    if(err.name === 'ValidationError') {
+      res.status(400).send({message: 'Переданы некорректные данные для постановки/снятии лайка'})
+    } else {
+      res.status(500).send({message: 'Произошла ошибка'})
+    };
+  })
 };
 
 module.exports.dislikeCard = (req, res) => {
@@ -62,6 +76,20 @@ module.exports.dislikeCard = (req, res) => {
     {$pull: {likes: req.user._id}},
     {new: true}
   )
-  .then(card => res.send({ data: card }))
-  .catch(err => res.status(500).send({message: 'Произошла ошибка'}));
+  .then(card => {
+    if (card === null) {
+      throw new NotFoundError('Передан несуществующий _id карточки')
+    }
+    return res.send({ data: card });
+  })
+  .catch(err => {
+    if (err.name === 'Not Found Error') {
+      res.status(err.statusCode).send({message: `${err.message}`});
+    }
+    if(err.name === 'ValidationError') {
+      res.status(400).send({message: 'Переданы некорректные данные для постановки/снятии лайка'})
+    } else {
+      res.status(500).send({message: 'Произошла ошибка'})
+    };
+  })
 };
