@@ -7,26 +7,26 @@ module.exports.createCard = (req, res) => {
     .then(card => res.send(card))
     .catch(err => {
       if(err.name === 'ValidationError') {
-        res.status(400).send({message: 'Переданы некорректные данные при создании карточки'});
+        res.status(400).send({message: 'Переданы некорректные данные при создании карточки.'});
       } else {
-        res.status(500).send({message: 'Произошла ошибка'});
+        res.status(500).send({message: 'Произошла ошибка.'});
       }
     });
 };
 module.exports.getCards = (req, res) => {
   Card.find({})
     .then(cards => res.send({data: cards}))
-    .catch(err => res.status(500).send({message: 'Произошла ошибка'}));
+    .catch(err => res.status(500).send({message: 'Произошла ошибка.'}));
 };
 module.exports.deleteCard = (req, res) => {
   const owner = req.user._id;
   Card.findById(req.params.cardId)
     .then((card)=> {
       if(card === null) {
-        throw new NotFoundError('Запрашиваемая карточка не найдена');
+        throw new NotFoundError('Запрашиваемая карточка не найдена.');
       }
       if(card.owner.toString() !== owner) {
-        throw new ForbiddenError('Нет прав на удаление карточки');
+        throw new ForbiddenError('Нет прав на удаление карточки.');
       }
       return Card.findByIdAndRemove(req.params.cardId)
         .populate(['owner', 'likes'])
@@ -42,7 +42,7 @@ module.exports.deleteCard = (req, res) => {
       if (err.name === 'Forbidden Error') {
         res.status(err.statusCode).send({message: `${err.message}`});
       } else {
-        res.status(500).send({message: 'Произошла ошибка'})
+        res.status(500).send({message: 'Произошла ошибка.'})
       }
     });
 };
@@ -54,7 +54,7 @@ module.exports.likeCard = (req, res) => {
   )
   .then(card => {
     if (card === null) {
-      throw new NotFoundError('Передан несуществующий _id карточки')
+      throw new NotFoundError('Передан несуществующий _id карточки.')
     }
     return res.send({ data: card });
   })
@@ -63,9 +63,9 @@ module.exports.likeCard = (req, res) => {
       res.status(err.statusCode).send({message: `${err.message}`});
     }
     if(err.name === 'ValidationError') {
-      res.status(400).send({message: 'Переданы некорректные данные для постановки/снятии лайка'})
+      res.status(400).send({message: 'Переданы некорректные данные для постановки/снятии лайка.'})
     } else {
-      res.status(500).send({message: 'Произошла ошибка'})
+      res.status(500).send({message: 'Произошла ошибка.'})
     };
   })
 };
@@ -78,7 +78,7 @@ module.exports.dislikeCard = (req, res) => {
   )
   .then(card => {
     if (card === null) {
-      throw new NotFoundError('Передан несуществующий _id карточки')
+      throw new NotFoundError('Передан несуществующий _id карточки.')
     }
     return res.send({ data: card });
   })
@@ -87,9 +87,9 @@ module.exports.dislikeCard = (req, res) => {
       res.status(err.statusCode).send({message: `${err.message}`});
     }
     if(err.name === 'ValidationError') {
-      res.status(400).send({message: 'Переданы некорректные данные для постановки/снятии лайка'})
+      res.status(400).send({message: 'Переданы некорректные данные для постановки/снятии лайка.'})
     } else {
-      res.status(500).send({message: 'Произошла ошибка'})
+      res.status(500).send({message: 'Произошла ошибка.'})
     };
   })
 };
