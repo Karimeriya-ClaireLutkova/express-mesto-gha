@@ -10,14 +10,14 @@ module.exports.createCard = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные при создании карточки.' });
       } else {
-        res.status(500).send({ message: 'Произошла ошибка.' });
+        res.status(500).send({ message: 'На сервере произошла ошибка.' });
       }
     });
 };
 module.exports.getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка.' }));
+    .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка.' }));
 };
 module.exports.deleteCard = (req, res, next) => {
   const owner = req.user._id;
@@ -46,7 +46,7 @@ module.exports.deleteCard = (req, res, next) => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: 'Переданы некорректные данные.' });
       } else {
-        res.status(500).send({ message: 'Произошла ошибка.' });
+        res.status(500).send({ message: 'На сервере произошла ошибка.' });
       }
     });
 };
@@ -69,7 +69,7 @@ module.exports.likeCard = (req, res) => {
       if ((err.name === 'ValidationError') || (err.name === 'CastError')) {
         res.status(400).send({ message: 'Переданы некорректные данные для постановки/снятии лайка.' });
       } else {
-        res.status(500).send({ message: 'Произошла ошибка.' });
+        res.status(500).send({ message: 'На сервере произошла ошибка.' });
       }
     });
 };
@@ -93,7 +93,7 @@ module.exports.dislikeCard = (req, res) => {
       if ((err.name === 'ValidationError') || (err.name === 'CastError')) {
         res.status(400).send({ message: 'Переданы некорректные данные для постановки/снятии лайка.' });
       } else {
-        res.status(500).send({ message: 'Произошла ошибка.' });
+        res.status(500).send({ message: 'На сервере произошла ошибка.' });
       }
     });
 };

@@ -9,14 +9,14 @@ module.exports.createUser = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя.' });
       } else {
-        res.status(500).send({ message: 'Произошла ошибка.' });
+        res.status(500).send({ message: 'На сервере произошла ошибка.' });
       }
     });
 };
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка.' }));
+    .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка.' }));
 };
 module.exports.getUser = (req, res) => {
   User.findById(req.params.userId)
@@ -33,7 +33,7 @@ module.exports.getUser = (req, res) => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: 'Переданы некорректные данные.' });
       } else {
-        res.status(500).send({ message: 'Произошла ошибка.' });
+        res.status(500).send({ message: 'На сервере произошла ошибка.' });
       }
     });
 };
@@ -54,7 +54,7 @@ module.exports.updateUser = (req, res) => {
       if (err.name === 'Not Found Error') {
         res.status(err.statusCode).send({ message: `${err.message}` });
       } else {
-        res.status(500).send({ message: 'Произошла ошибка.' });
+        res.status(500).send({ message: 'На сервере произошла ошибка.' });
       }
     });
 };
@@ -75,7 +75,7 @@ module.exports.updateAvatar = (req, res) => {
       if (err.name === 'Not Found Error') {
         res.status(err.statusCode).send({ message: `${err.message}` });
       } else {
-        res.status(500).send({ message: 'Произошла ошибка.' });
+        res.status(500).send({ message: 'На сервере произошла ошибка.' });
       }
     });
 };
