@@ -3,10 +3,11 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const routerUsers = require('./routes/users');
 const routerCards = require('./routes/cards');
+const { DATABASE_URL } = require('./utils/constants');
 
 const { PORT = 3000 } = process.env;
 const app = express();
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
+mongoose.connect(DATABASE_URL, {
   useNewUrlParser: true,
 });
 app.use(bodyParser.json());
