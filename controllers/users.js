@@ -25,10 +25,10 @@ module.exports.createUser = (req, res) => {
     .then((user) => res.status(201).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
+        if (err.code === 11000) {
+          throw new ConflictError('Пользователь с таким email уже существует');
+        }
         res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя.' });
-      }
-      if (err.code === 11000) {
-        throw new ConflictError('Пользователь с таким email уже существует');
       } else {
         res.status(500).send({ message: 'На сервере произошла ошибка.' });
       }
