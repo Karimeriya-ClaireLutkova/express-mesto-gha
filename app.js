@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const { celebrate, Joi } = require('celebrate');
+const { celebrate, Joi, errors } = require('celebrate');
 const routerUsers = require('./routes/users');
 const routerCards = require('./routes/cards');
 const auth = require('./middlewares/auth');
@@ -23,12 +23,16 @@ app.post('/signup', celebrate({
     about: Joi.string().min(2).max(30),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
-  }),
+  }).unknown(true),
 }), createUser);
 app.use(auth);
 app.use(routerUsers);
 app.use(routerCards);
 app.use('*', (req, res) => {
   res.status(404).send({ message: 'Ресурс не найден' });
+});
+app.use(errors());
+app.use((err, req, res, next) => {
+
 });
 app.listen(PORT);
