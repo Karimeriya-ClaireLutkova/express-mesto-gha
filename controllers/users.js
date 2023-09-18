@@ -24,6 +24,7 @@ module.exports.createUser = (req, res) => {
     }))
     .then((user) => res.status(201).send(user))
     .catch((err) => {
+      console.log(err);
       if (err.name === 'ValidationError') {
         if (err.code === 11000) {
           throw new ConflictError('Пользователь с таким email уже существует');
