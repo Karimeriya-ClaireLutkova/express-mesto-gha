@@ -6,7 +6,7 @@ const ConflictError = require('../errors/ConflictError');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const {
     name,
     about,
@@ -25,10 +25,10 @@ module.exports.createUser = (req, res) => {
     .then((user) => res.status(201).send(user))
     .catch((err) => {
       console.log(err);
+      if (err.code === 11000) {
+        next(new ConflictError('Пользователь с таким email уже существует'));
+      }
       if (err.name === 'ValidationError') {
-        if (err.code === 11000) {
-          throw new ConflictError('Пользователь с таким email уже существует');
-        }
         res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя.' });
       } else {
         res.status(500).send({ message: 'На сервере произошла ошибка.' });
