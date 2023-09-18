@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const validator = require('validator');
 const UnauthorizedError = require('../errors/UnauthorizedError');
+const { object } = require('joi');
 
 const userSchema = new mongoose.Schema(
   {
@@ -40,6 +41,11 @@ const userSchema = new mongoose.Schema(
   },
   { versionKey: false },
 );
+userSchema.methods.toJSON = function () {
+  const user = this.toObject();
+  delete user.password;
+  return user;
+};
 
 userSchema.statics.findUserByCredentials = function findUser(email, password) {
   return this.findOne({ email }).select('+password')
