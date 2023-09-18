@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const routerUsers = require('./routes/users');
 const routerCards = require('./routes/cards');
+const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
 require('dotenv').config();
 
@@ -19,10 +20,12 @@ app.use((req, res, next) => {
   };
   next();
 });
-app.use(routerUsers);
-app.use(routerCards);
+
 app.post('/signin', login);
 app.post('/signup', createUser);
+app.use(auth);
+app.use(routerUsers);
+app.use(routerCards);
 app.use('*', (req, res) => {
   res.status(404).send({ message: 'Ресурс не найден' });
 });
