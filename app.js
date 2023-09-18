@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const routerUsers = require('./routes/users');
 const routerCards = require('./routes/cards');
+require('dotenv').config();
 
 const { PORT = 3000 } = process.env;
 const app = express();
