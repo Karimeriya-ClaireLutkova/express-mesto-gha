@@ -24,7 +24,7 @@ module.exports.createUser = (req, res, next) => {
     }))
     .then((data) => {
       const user = data;
-      user.password = 'null';
+      user.password = undefined;
       res.status(201).send(user);
     })
     .catch((err) => {
