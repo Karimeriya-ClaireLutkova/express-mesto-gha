@@ -41,15 +41,15 @@ const userSchema = new mongoose.Schema(
   { versionKey: false },
 );
 
-userSchema.statics.findUserByCredentials = function findUser(email, password, next) {
+userSchema.statics.findUserByCredentials = function findUser(email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (user === null) {
-        next(new UnauthorizedError('Передан неверный логин или пароль.'));
+        return Promise.reject(new UnauthorizedError('Передан неверный логин или пароль.'));
       }
       return bcrypt.compare(password, user.password).then((matched) => {
         if (!matched) {
-          next(new UnauthorizedError('Передан неверный логин или пароль.'));
+          return Promise.reject(new UnauthorizedError('Передан неверный логин или пароль.'));
         }
         return user;
       });
