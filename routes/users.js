@@ -12,7 +12,7 @@ router.get('/users', getUsers);
 router.get('/users/:userId', celebrate({
   params: Joi.object().keys({
     userId: Joi.string().alphanum().length(24),
-  }),
+  }).unknown(true),
 }), getUser);
 router.get('/users/me', getUserСurrent);
 router.patch('/users/me', celebrate({
@@ -26,7 +26,7 @@ router.patch('/users/me/avatar', celebrate({
     avatar: Joi.string().regex(
       /^https?:\/\/(www\.)?([0-9a-zA-Z.-]+\.)+[a-z]{2,6}(?:\/[^/#?]+)+\.(?:jpe?g|gif|png|bmp|webp)$/i,
     ),
-  }),
+  }).unknown(true),
 }), updateAvatar);
 
 module.exports = router;
