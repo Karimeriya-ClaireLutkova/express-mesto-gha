@@ -16,7 +16,7 @@ router.post('/cards', celebrate({
   }).unknown(true),
 }), createCard);
 router.get('/cards', getCards);
-router.delete('cards/:cardId', celebrate({
+router.delete('/cards/:cardId', celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().alphanum().length(24),
   }).unknown(true),
