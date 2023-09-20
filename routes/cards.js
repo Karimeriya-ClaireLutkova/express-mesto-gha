@@ -16,17 +16,17 @@ router.post('/cards', celebrate({
   }).unknown(true),
 }), createCard);
 router.get('/cards', getCards);
-router.delete('/cards/:cardId', celebrate({
+router.delete('/:cardId', celebrate({
   params: Joi.object().keys({
     cardId: (Joi.string().alphanum().length(0) || Joi.string().alphanum().length(24)),
   }).unknown(true),
 }), deleteCard);
-router.put('/cards/:cardId/likes', celebrate({
+router.put('/:cardId/likes', celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().alphanum().length(24),
   }).unknown(true),
 }), likeCard);
-router.delete('/cards/:cardId/likes', celebrate({
+router.delete('/:cardId/likes', celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().alphanum().length(24),
   }).unknown(true),
