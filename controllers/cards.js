@@ -18,7 +18,13 @@ module.exports.createCard = (req, res, next) => {
 };
 module.exports.getCards = (req, res, next) => {
   Card.find({})
-    .then((cards) => res.send({ data: cards }))
+    .then((cards) => {
+      if (cards === undefined || cards.length === 0) {
+        res.send({ message: 'Карточки не найдены' });
+      } else {
+        res.send({ data: cards });
+      }
+    })
     .catch((err) => next(err));
 };
 module.exports.deleteCard = (req, res, next) => {
@@ -31,13 +37,9 @@ module.exports.deleteCard = (req, res, next) => {
       if (card.owner.toString() !== owner) {
         next(new ForbiddenError('Нет прав на удаление карточки.'));
       }
-      return Card.findByIdAndRemove(req.params.cardId)
-        .populate(['owner', 'likes'])
-        .then(() => res.send({ data: card }))
-        .catch((err) => {
-          next(err);
-        });
+      return Card.findByIdAndRemove(req.params.cardId);
     })
+    .then((deletedCard) => res.send(deletedCard))
     .catch((err) => {
       if (err.name === 'Not Found Error') {
         next(new NotFoundError('Запрашиваемая карточка не найдена.'));
