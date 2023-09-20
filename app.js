@@ -12,11 +12,12 @@ require('dotenv').config();
 const { PORT = 3000 } = process.env;
 const app = express();
 const DATABASE_URL = 'mongodb://127.0.0.1:27017/mestodb';
-app.use(cookieParser());
+
 mongoose.connect(DATABASE_URL, {
   useNewUrlParser: true,
 });
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
