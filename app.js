@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const { celebrate, Joi, errors } = require('celebrate');
 const routerUsers = require('./routes/users');
 const routerCards = require('./routes/cards');
@@ -15,6 +16,7 @@ mongoose.connect(DATABASE_URL, {
   useNewUrlParser: true,
 });
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
