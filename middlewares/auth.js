@@ -4,7 +4,6 @@ const secretJwtKey = require('../utils/constants');
 
 module.exports = (req, res, next) => {
   const token = req.cookies.jwt;
-  console.log(token);
   if (!token) {
     return next(new UnauthorizedError('Необходима авторизация.'));
   }
@@ -15,7 +14,6 @@ module.exports = (req, res, next) => {
   } catch (err) {
     next(new UnauthorizedError('Необходима авторизация.'));
   }
-  console.log(payload);
   req.user = payload;
   return next();
 };
