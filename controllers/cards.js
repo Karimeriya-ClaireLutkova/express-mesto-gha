@@ -1,24 +1,25 @@
 const Card = require('../models/card');
 const NotFoundError = require('../errors/NotFoundError');
 const ForbiddenError = require('../errors/ForbiddenError');
+const ValidationError = require('../errors/ValidationError');
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   Card.create({ name, link, owner })
     .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные при создании карточки.' });
+        next(new ValidationError('Переданы некорректные данные при создании карточки.'));
       } else {
-        res.status(500).send({ message: 'На сервере произошла ошибка.' });
+        next(err);
       }
     });
 };
-module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
-    .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка.' }));
+    .catch((err) => next(err));
 };
 module.exports.deleteCard = (req, res, next) => {
   const owner = req.user._id;
@@ -28,7 +29,7 @@ module.exports.deleteCard = (req, res, next) => {
         throw new NotFoundError('Запрашиваемая карточка не найдена.');
       }
       if (card.owner.toString() !== owner) {
-        throw new ForbiddenError('Нет прав на удаление карточки.');
+        next(new ForbiddenError('Нет прав на удаление карточки.'));
       }
       return Card.findByIdAndRemove(req.params.cardId)
         .populate(['owner', 'likes'])
@@ -39,19 +40,19 @@ module.exports.deleteCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'Not Found Error') {
-        res.status(err.statusCode).send({ message: `${err.message}` });
+        next(new NotFoundError('Запрашиваемая карточка не найдена.'));
       }
       if (err.name === 'Forbidden Error') {
-        res.status(err.statusCode).send({ message: `${err.message}` });
+        next(new ForbiddenError('Нет прав на удаление карточки.'));
       }
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Переданы некорректные данные.' });
+      if ((err.name === 'ValidationError') || (err.name === 'CastError')) {
+        next(new ValidationError('Переданы некорректные данные при удалении карточки.'));
       } else {
-        res.status(500).send({ message: 'На сервере произошла ошибка.' });
+        next(err);
       }
     });
 };
-module.exports.likeCard = (req, res) => {
+module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
@@ -65,17 +66,17 @@ module.exports.likeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'Not Found Error') {
-        res.status(err.statusCode).send({ message: `${err.message}` });
+        next(new NotFoundError('Передан несуществующий _id карточки.'));
       }
       if ((err.name === 'ValidationError') || (err.name === 'CastError')) {
-        res.status(400).send({ message: 'Переданы некорректные данные для постановки/снятии лайка.' });
+        next(new ValidationError('Переданы некорректные данные для постановки/снятии лайка.'));
       } else {
-        res.status(500).send({ message: 'На сервере произошла ошибка.' });
+        next(err);
       }
     });
 };
 
-module.exports.dislikeCard = (req, res) => {
+module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
@@ -89,12 +90,12 @@ module.exports.dislikeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'Not Found Error') {
-        res.status(err.statusCode).send({ message: `${err.message}` });
+        next(new NotFoundError('Передан несуществующий _id карточки.'));
       }
       if ((err.name === 'ValidationError') || (err.name === 'CastError')) {
-        res.status(400).send({ message: 'Переданы некорректные данные для постановки/снятии лайка.' });
+        next(new ValidationError('Переданы некорректные данные для постановки/снятии лайка.'));
       } else {
-        res.status(500).send({ message: 'На сервере произошла ошибка.' });
+        next(err);
       }
     });
 };
