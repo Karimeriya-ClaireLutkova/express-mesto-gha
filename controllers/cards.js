@@ -42,7 +42,7 @@ module.exports.deleteCard = (req, res, next) => {
       if (err.name === 'Not Found Error') {
         next(new NotFoundError('Запрашиваемая карточка не найдена.'));
       }
-      if (err.name === 'Forbidden Error') {
+      if (err.name === 'ForbiddenError') {
         next(new ForbiddenError('Нет прав на удаление карточки.'));
       }
       if ((err.name === 'ValidationError') || (err.name === 'CastError')) {
