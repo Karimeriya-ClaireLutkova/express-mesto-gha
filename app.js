@@ -20,12 +20,18 @@ mongoose.connect(DATABASE_URL, {
 
 app.use(cors({
   origin: ['https://practical.mesto.students.nomoredomainsrocks.ru',
-    'http://practical.mesto.students.nomoredomainsrocks.ru'],
+    'http://practical.mesto.students.nomoredomainsrocks.ru',
+  ],
   credentials: true,
 }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(requestLogger);
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
