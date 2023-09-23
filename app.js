@@ -6,19 +6,21 @@ const { celebrate, Joi, errors } = require('celebrate');
 const routerUsers = require('./routes/users');
 const routerCards = require('./routes/cards');
 const auth = require('./middlewares/auth');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { login, createUser } = require('./controllers/users');
+const corsRules = require('./middlewares/corsRules');
 require('dotenv').config();
 
 const { PORT = 3000 } = process.env;
 const app = express();
 const DATABASE_URL = 'mongodb://127.0.0.1:27017/mestodb';
-
 mongoose.connect(DATABASE_URL, {
   useNewUrlParser: true,
 });
 app.use(bodyParser.json());
 app.use(cookieParser());
-
+app.use(requestLogger);
+app.use(corsRules());
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -40,6 +42,7 @@ app.use(routerCards);
 app.use('*', (req, res) => {
   res.status(404).send({ message: 'Ресурс не найден' });
 });
+app.use(errorLogger);
 app.use(errors());
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
