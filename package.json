@@ -22,7 +22,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.5.0",
     "validator": "^13.11.0",
-    "winston": "^3.10.0"
+    "winston": "^3.10.0",
+    "cors": "^2.8.5"
   },
   "scripts": {
     "start": "node app.js",
