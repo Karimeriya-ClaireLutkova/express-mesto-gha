@@ -3,6 +3,7 @@ const { allowedCors, DEFAULT_ALLOWED_METHODS } = require('../utils/constants');
 const corsRules = (req, res, next) => {
   const { origin } = req.headers;
   const { method } = req;
+  console.log(req);
   const requestHeaders = req.headers['access-control-request-headers'];
 
   if (allowedCors.includes(origin)) {
