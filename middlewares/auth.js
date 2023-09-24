@@ -4,9 +4,7 @@ const { NODE_ENV, JWT_SECRET } = require('../utils/constants');
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
-  console.log(req.headers);
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    console.log(req);
     return next(new UnauthorizedError('Неправильные почта или пароль'));
   }
   const token = authorization.replace('Bearer ', '');
@@ -18,6 +16,5 @@ module.exports = (req, res, next) => {
     next(new UnauthorizedError('Необходима авторизация.'));
   }
   req.user = payload;
-  console.log(req.user);
   return next();
 };
