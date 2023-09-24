@@ -46,7 +46,8 @@ module.exports.login = (req, res, next) => {
       const user = data;
       user.password = undefined;
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
-      res.send({ token });
+      user.token = token;
+      res.send(user);
     })
     .catch(() => {
       next(new UnauthorizedError('Передан неверный логин или пароль.'));
