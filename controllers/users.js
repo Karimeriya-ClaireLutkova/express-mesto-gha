@@ -7,6 +7,7 @@ const ValidationError = require('../errors/ValidationError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 const { NODE_ENV, JWT_SECRET } = require('../utils/constants');
 
+console.log(JWT_SECRET);
 module.exports.createUser = (req, res, next) => {
   const {
     name,
